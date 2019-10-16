@@ -76,13 +76,13 @@ namespace Assets.Sprict.Field
                 field = PieceController.PieceSet(field, IDsetter++, 2 - PiecePosX, 4 - PiecePosY);
             }
 
-            TurnSide = rnd.Next(2);
+            TurnSide = rnd.Next(2) + 1 ;
         }
 
         public void ChangeSide()
         {
-            TurnSide++;
             TurnSide %= 2;
+            TurnSide++;            
         }
     }
 }

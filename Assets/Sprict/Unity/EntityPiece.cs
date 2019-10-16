@@ -23,9 +23,13 @@ public class EntityPiece : MonoBehaviour
     }
 
     public void UpDataPos()
-    {
+    { 
         Field field = GM.GetComponent<GameManager>().game.field;
         Piece piece = PieceController.PieceFromID(field, ID);
+        if (piece.isDeath == true)
+        {
+            gameObject.active = false;
+        }
         Vector3 pos = new Vector3();
         pos.x = (piece.PosX - 1) * 1.75f;
         pos.y = - piece.PosY * 1.75f + 4.5f ;
@@ -44,8 +48,11 @@ public class EntityPiece : MonoBehaviour
 
     public void OnMouseOver()
     {
-        Debug.Log("9");
-        GM.GetComponent<GameManager>().MosueOver(ID);
+        Debug.Log("j");
+        if (Input.GetMouseButton(0))
+        {
+            GM.GetComponent<GameManager>().PieceChoice(ID);
+        }
     }
 
 

@@ -30,7 +30,7 @@ namespace Assets.Sprict.Field
             CanMoveDirecInit.Add(new bool[8] { true, false, true, false, true, false, true, false });
             CanMoveDirecInit.Add(new bool[8] { true, true, false, true, true, true, false, true });
             divX = new int[8] { 0, 1, 1, 1, 0, -1, -1, -1 };
-            divY = new int[8] { -1, -1, 0, 1, 1, 1, 0, -1 };
+            divY = new int[8] { 1, 1, 0, -1, -1, -1, 0, 1 };
         }
 
         /// <summary>
@@ -67,8 +67,8 @@ namespace Assets.Sprict.Field
         {
             Piece piece = PieceFromID(field, id);
             piece.Angle += turn;
-            if (piece.Angle < 0) piece.Angle += 4;
-            if (piece.Angle > 3) piece.Angle -= 4;
+            piece.Angle += 4;
+            piece.Angle %= 4;
             return field;
         }
 
@@ -146,7 +146,7 @@ namespace Assets.Sprict.Field
             for (int i = 0; i < 8; i++)
             {
                 int nextX = piece.PosX + divX[i];
-                int nextY = piece.PosY + divX[i];
+                int nextY = piece.PosY + divY[i];
                 if(PieceCanMoveJudge(field, piece.ID, piece.Side, nextX, nextY))
                 {
                     ret.Add(new ActionDate(piece.ID, 0, nextX, nextY));
@@ -198,6 +198,7 @@ namespace Assets.Sprict.Field
 
             foreach (Piece item in Player)
             {
+                if (item.isDeath) continue;
                 if (x == item.PosX && y == item.PosY)
                 {
                     return false;

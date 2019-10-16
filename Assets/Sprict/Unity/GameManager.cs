@@ -8,6 +8,11 @@ public class GameManager : MonoBehaviour
 
     public FieldController game;
     [SerializeField] GameObject[] cells;
+    [SerializeField] GameObject rotateR;
+    [SerializeField] GameObject rotateL;
+    Piece CurrentPiece;
+    public bool isChoice; 
+    
 
     // Start is called before the first frame update
     void Start()
@@ -21,12 +26,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //foreach (GameObject item in cells)
-        //{
-        //    Vector3 pos = item.transform.position;
-        //    pos.z = 2f;
-        //    item.transform.position = pos;
-        //}
+        if (Input.GetMouseButton(1))
+        {
+            isChoice = false;
+            foreach(GameObject item in cells)
+            {
+                item.GetComponent<BoadCell>().colorChangeMu();
+            }
+            rotateL.SetActive(false);
+            rotateR.SetActive(false);
+        }
     }
 
     public void SpawnAll()
@@ -41,20 +50,103 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void MosueOver(int id)
+
+    public void PieceChoice(int id)
     {
-        Piece piece = PieceController.PieceFromID(game.field, id);
-        List<ActionDate> ActionList; 
-        ActionList =  PieceController.PieceActionList(game.field, piece);
-        foreach(ActionDate item in ActionList)
+        foreach (GameObject item in cells)
         {
-            if(item.MoveOrTurn == 0)
+            item.GetComponent<BoadCell>().colorChangeMu();
+        }
+        if (PieceController.PieceFromID(game.field, id).Side == game.TurnSide)
+        {
+            CurrentPiece = PieceController.PieceFromID(game.field, id);
+            isChoice = true;
+            List<ActionDate> ActionList;
+            ActionList = PieceController.PieceActionList(game.field, CurrentPiece);
+            foreach (ActionDate item in ActionList)
             {
-                Vector3 pos = cells[item.MoveX + item.MoveY * 3].transform.position;
-                pos.z = 0.5f;
-                cells[item.MoveX + item.MoveY * 3].transform.position = pos;
+                if (item.MoveOrTurn == 0)
+                {
+                    cells[item.MoveX + item.MoveY * 3].GetComponent<BoadCell>().colorChangeYerrow();
+                }
+            }
+
+            rotateL.SetActive(true);
+            rotateR.SetActive(true);
+            Vector3 posPiece;
+            int sideDirec = CurrentPiece.Side;
+            posPiece.x = (CurrentPiece.PosX - 1) * 1.75f;
+            posPiece.y = -CurrentPiece.PosY * 1.75f + 4.5f;
+            posPiece.z = -1;
+            sideDirec = sideDirec * 2 - 3;
+            rotateL.transform.position = new Vector3((float)(posPiece.x - 0.75), (float)(posPiece.y - sideDirec * 0.75), posPiece.z);
+            rotateR.transform.position = new Vector3((float)(posPiece.x + 0.75), (float)(posPiece.y - sideDirec * 0.75), posPiece.z);
+        }
+        else
+        {
+            if (isChoice == true)
+            {
+                Piece enemy = PieceController.PieceFromID(game.field, id);
+                if (CanMove(enemy.PosX, enemy.PosY))
+                {
+                    Move(enemy.PosX, enemy.PosY);
+                    game.field = PieceController.PieceDeath(game.field, enemy.ID);
+                    if(enemy.ID == 0)
+                    {
+                        GameEnd(2);
+                    }
+                    if(enemy.ID == 1)
+                    {
+                        GameEnd(1);
+                    }
+                    
+                    int lest = 0;
+                    foreach(Piece item in game.field.Player1)
+                    {
+                        if (!item.isDeath) lest++;
+                    }
+                    if (lest == 2) GameEnd(0);
+                    
+                }
             }
         }
+    }
+
+    public bool CanMove(int x, int y)
+    {
+        return PieceController.PieceCanMoveJudge(game.field, CurrentPiece.ID, CurrentPiece.Side, x, y);
+    }
+
+    public void Move(int x, int y)
+    {
+        game.field = PieceController.PieceSet(game.field, CurrentPiece.ID, x, y);
+        game.ChangeSide();
+        isChoice = false;
+        foreach (GameObject item in cells)
+        {
+            item.GetComponent<BoadCell>().colorChangeMu();
+        }
+        rotateL.SetActive(false);
+        rotateR.SetActive(false);
+    }
+
+    public void Rotate(int direc)
+    {
+        int side = CurrentPiece.Side * 2 - 3;
+        game.field = PieceController.PieceRotate(game.field, CurrentPiece.ID, side * direc);
+        game.ChangeSide();
+        isChoice = false;
+        foreach (GameObject item in cells)
+        {
+            item.GetComponent<BoadCell>().colorChangeMu();
+        }
+        rotateL.SetActive(false);
+        rotateR.SetActive(false);
+    }
+
+    void GameEnd(int winner)
+    {
+
     }
 
 }
