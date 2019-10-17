@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
         {
             item.GetComponent<BoadCell>().colorChangeMu();
         }
+        rotateL.SetActive(false);
+        rotateR.SetActive(false);
         if (PieceController.PieceFromID(game.field, id).Side == game.TurnSide)
         {
             CurrentPiece = PieceController.PieceFromID(game.field, id);
@@ -74,13 +76,23 @@ public class GameManager : MonoBehaviour
             rotateL.SetActive(true);
             rotateR.SetActive(true);
             Vector3 posPiece;
-            int sideDirec = CurrentPiece.Side;
             posPiece.x = (CurrentPiece.PosX - 1) * 1.75f;
             posPiece.y = -CurrentPiece.PosY * 1.75f + 4.5f;
             posPiece.z = -1;
-            sideDirec = sideDirec * 2 - 3;
-            rotateL.transform.position = new Vector3((float)(posPiece.x - 0.75), (float)(posPiece.y - sideDirec * 0.75), posPiece.z);
-            rotateR.transform.position = new Vector3((float)(posPiece.x + 0.75), (float)(posPiece.y - sideDirec * 0.75), posPiece.z);
+            if (CurrentPiece.Side == 1)
+            {
+                rotateL.transform.position = new Vector3((float)(posPiece.x + 0.75), (float)(posPiece.y + 0.75), posPiece.z);
+                rotateR.transform.position = new Vector3((float)(posPiece.x - 0.75), (float)(posPiece.y + 0.75), posPiece.z);
+                rotateL.transform.eulerAngles = new Vector3(0, 0, 180f);
+                rotateR.transform.eulerAngles = new Vector3(0, 0, 180f);
+            }
+            else
+            {
+                rotateL.transform.position = new Vector3((float)(posPiece.x - 0.75), (float)(posPiece.y - 0.75), posPiece.z);
+                rotateR.transform.position = new Vector3((float)(posPiece.x + 0.75), (float)(posPiece.y - 0.75), posPiece.z);
+                rotateL.transform.eulerAngles = new Vector3(0, 0, 0);
+                rotateR.transform.eulerAngles = new Vector3(0, 0, 0);
+            }
         }
         else
         {

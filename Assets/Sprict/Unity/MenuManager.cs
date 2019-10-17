@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class MenuManager : MonoBehaviour
 
     public void GameStart2P()
     {
-
+        SceneManager.LoadScene("2PGame");
     }
 
     public void GameStart1P(int herd)
@@ -33,6 +34,6 @@ public class MenuManager : MonoBehaviour
 
     public void Exit()
     {
-
+        Application.Quit();
     }
 }

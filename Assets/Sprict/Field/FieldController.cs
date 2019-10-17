@@ -84,5 +84,20 @@ namespace Assets.Sprict.Field
             TurnSide %= 2;
             TurnSide++;            
         }
+
+        public int JudgeWinner()
+        {
+            if (PieceController.PieceFromID(field, 0).isDeath)
+            {
+                return 2;
+            }
+            if(PieceController.PieceFromID(field, 1).isDeath)
+            {
+                return 1;
+            }
+
+
+            return 0;
+        }
     }
 }
