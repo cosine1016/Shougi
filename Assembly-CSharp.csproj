@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Sprict\AI\Rand.cs" />
     <Compile Include="Assets\Sprict\Field\ActionDate.cs" />
     <Compile Include="Assets\Sprict\Field\Field.cs" />
     <Compile Include="Assets\Sprict\Field\FieldController.cs" />

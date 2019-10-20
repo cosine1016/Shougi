@@ -23,9 +23,14 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void GameStart1P(int herd)
+    public void GameStart1P(int hard)
     {
-
+        switch (hard)
+        {
+            case 0:
+                SceneManager.LoadScene(2);
+                break;
+        }
     }
 
     public void Tutorial()

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Sprict.Field;
+using Assets.Sprict.AI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,7 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Material[] EndBaner;
     [SerializeField] AudioClip ti;
     [SerializeField] AudioClip akahara;
-    public bool isChoice; 
+    public bool isChoice;
+    Rand RandAI;
     
 
     // Start is called before the first frame update
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
         PieceController.init();
         game.InitilizedRandomGame();
         SpawnAll();
+        RandAI = new Rand();
     }
 
     // Update is called once per frame
@@ -42,6 +45,10 @@ public class GameManager : MonoBehaviour
             }
             rotateL.SetActive(false);
             rotateR.SetActive(false);
+        }
+        if(vsCPU && game.TurnSide == 2)
+        {
+            CPUACtion();
         }
     }
 
@@ -68,6 +75,7 @@ public class GameManager : MonoBehaviour
         rotateR.SetActive(false);
         if (PieceController.PieceFromID(game.field, id).Side == game.TurnSide)
         {
+            if (vsCPU && PieceController.PieceFromID(game.field, id).Side == 2) return;
             CurrentPiece = PieceController.PieceFromID(game.field, id);
             isChoice = true;
             List<ActionDate> ActionList;
@@ -152,6 +160,34 @@ public class GameManager : MonoBehaviour
         rotateR.SetActive(false);
         GetComponent<AudioSource>().PlayOneShot(ti);
     }
+
+    void CPUACtion()
+    {
+        ActionDate action = new ActionDate(-1, -1, -1);
+        switch (CPULevel)
+        {
+            case 1:
+                action = RandAI.Return(game.field);
+                break;
+            default:
+                break;
+        }
+        CurrentPiece = PieceController.PieceFromID(game.field, action.ID);
+        if(action.MoveOrTurn == 0)
+        {
+            int enemyid = game.field.IDs[action.MoveX, action.MoveY];
+            if (enemyid > 0)
+            {
+                game.field = PieceController.PieceDeath(game.field, enemyid);
+            }
+            Move(action.MoveX, action.MoveY);
+        }
+        else
+        {
+            Rotate(action.Turn);
+        }
+    }
+
 
     void GameEnd(int winner)
     {

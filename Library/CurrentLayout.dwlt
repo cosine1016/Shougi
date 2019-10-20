@@ -162,7 +162,7 @@ MonoBehaviour:
   m_MinSize: {x: 909, y: 324}
   m_MaxSize: {x: 22006, y: 10024}
   vertical: 0
-  controlID: 17652
+  controlID: 2752
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 324}
   m_MaxSize: {x: 4002, y: 8024}
   vertical: 1
-  controlID: 17653
+  controlID: 2753
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -456,7 +456,7 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 56732
+  m_LastSelectedObjectID: 12796
 --- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -611,7 +611,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 2c36fdff2e6dfdff5276fdffb076feffb8a4feffcca4feffdca4feff569fffff76a3ffff64a6ffff30cdffff52ceffff8ed3ffff24faffffbcfbffff74870000
+      m_ExpandedIDs: 5867ffffd6fbfffffc310000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -673,20 +673,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Textuer/Materials
+    - Assets/Sprict/Unity
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Textuer/Materials
+  - Assets/Sprict/Unity
   m_LastFoldersGridSize: -1
   m_LastProjectPath: E:\Github\Shougi
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ee280000
-    m_LastClickedID: 10478
-    m_ExpandedIDs: 00000000262700006c27000068290000be81000000ca9a3b
+    m_SelectedIDs: 42270000
+    m_LastClickedID: 10050
+    m_ExpandedIDs: 000000001a270000642700001c2800009629000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -714,7 +714,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000262700006c27000068290000be81000000ca9a3b
+    m_ExpandedIDs: 000000001a270000642700001c2800009629000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -766,7 +766,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 340}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 64
   m_DirectoriesAreaWidth: 170
 --- !u!114 &21
