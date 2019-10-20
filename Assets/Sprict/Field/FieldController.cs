@@ -87,17 +87,37 @@ namespace Assets.Sprict.Field
 
         public int JudgeWinner()
         {
-            if (PieceController.PieceFromID(field, 0).isDeath)
+            if (PieceController.PieceFromID(field, 1).isDeath)
             {
                 return 2;
             }
-            if(PieceController.PieceFromID(field, 1).isDeath)
+            if(PieceController.PieceFromID(field, 2).isDeath)
             {
                 return 1;
             }
+            
+            foreach (Piece item in field.Player1)
+            {
+                if(item.ID > 2)
+                {
+                    if (!item.isDeath) return 0;
+                }
+            }
+            foreach (Piece item in field.Player2)
+            {
+                if (item.ID > 2)
+                {
+                    if (!item.isDeath) return 0;
+                }
+            }
+            Piece p1 = PieceController.PieceFromID(field, 1), p2 = PieceController.PieceFromID(field, 2);
+            int dx = p2.PosX - p1.PosX, dy = p2.PosY - p1.PosY;
+            if(dx * dx <= 1 && dy * dy <= 1)
+            {
+                return 0;
+            }
 
-
-            return 0;
+            return 3;
         }
     }
 }

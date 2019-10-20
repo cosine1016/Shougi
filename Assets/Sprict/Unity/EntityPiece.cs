@@ -28,7 +28,7 @@ public class EntityPiece : MonoBehaviour
         Piece piece = PieceController.PieceFromID(field, ID);
         if (piece.isDeath == true)
         {
-            gameObject.active = false;
+            gameObject.SetActive(false);
         }
         Vector3 pos = new Vector3();
         pos.x = (piece.PosX - 1) * 1.75f;
@@ -48,7 +48,6 @@ public class EntityPiece : MonoBehaviour
 
     public void OnMouseOver()
     {
-        Debug.Log("j");
         if (Input.GetMouseButton(0))
         {
             GM.GetComponent<GameManager>().PieceChoice(ID);

@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using Assets.Sprict.Field;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
 
     public FieldController game;
+    [SerializeField] bool vsCPU;
+    [SerializeField] int CPULevel;
     [SerializeField] GameObject[] cells;
     [SerializeField] GameObject rotateR;
     [SerializeField] GameObject rotateL;
     Piece CurrentPiece;
+    [SerializeField] GameObject End;
+    [SerializeField] Material[] EndBaner;
+    [SerializeField] AudioClip ti;
+    [SerializeField] AudioClip akahara;
     public bool isChoice; 
     
 
@@ -101,24 +108,8 @@ public class GameManager : MonoBehaviour
                 Piece enemy = PieceController.PieceFromID(game.field, id);
                 if (CanMove(enemy.PosX, enemy.PosY))
                 {
-                    Move(enemy.PosX, enemy.PosY);
                     game.field = PieceController.PieceDeath(game.field, enemy.ID);
-                    if(enemy.ID == 0)
-                    {
-                        GameEnd(2);
-                    }
-                    if(enemy.ID == 1)
-                    {
-                        GameEnd(1);
-                    }
-                    
-                    int lest = 0;
-                    foreach(Piece item in game.field.Player1)
-                    {
-                        if (!item.isDeath) lest++;
-                    }
-                    if (lest == 2) GameEnd(0);
-                    
+                    Move(enemy.PosX, enemy.PosY);
                 }
             }
         }
@@ -140,12 +131,17 @@ public class GameManager : MonoBehaviour
         }
         rotateL.SetActive(false);
         rotateR.SetActive(false);
+        if (game.JudgeWinner() != 0)
+        {
+            GameEnd(game.JudgeWinner());
+        }
+        GetComponent<AudioSource>().PlayOneShot(ti);
+
     }
 
     public void Rotate(int direc)
     {
-        int side = CurrentPiece.Side * 2 - 3;
-        game.field = PieceController.PieceRotate(game.field, CurrentPiece.ID, side * direc);
+        game.field = PieceController.PieceRotate(game.field, CurrentPiece.ID, direc);
         game.ChangeSide();
         isChoice = false;
         foreach (GameObject item in cells)
@@ -154,11 +150,20 @@ public class GameManager : MonoBehaviour
         }
         rotateL.SetActive(false);
         rotateR.SetActive(false);
+        GetComponent<AudioSource>().PlayOneShot(ti);
     }
 
     void GameEnd(int winner)
     {
-
+        End.SetActive(true);
+        GetComponent<AudioSource>().PlayOneShot(akahara);
+        End.GetComponent<Renderer>().material = EndBaner[winner - 1];
     }
+    
+    public void Exit()
+    {
+        SceneManager.LoadScene(0);
+    }
+
 
 }

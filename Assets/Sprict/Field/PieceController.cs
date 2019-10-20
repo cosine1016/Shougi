@@ -23,7 +23,7 @@ namespace Assets.Sprict.Field
             CanMoveDirecInit.Add(new bool[8] { true, false, false, false, true, false, false, false });
             CanMoveDirecInit.Add(new bool[8] { true, false, false, true, false, true, false, false });
             CanMoveDirecInit.Add(new bool[8] { true, false, true, true, false, true, true, false });
-            CanMoveDirecInit.Add(new bool[8] { true, true, false, true, false, true, false, false });
+            CanMoveDirecInit.Add(new bool[8] { true, false, false, true, false, true, false, true });
             CanMoveDirecInit.Add(new bool[8] { false, true, false, true, false, true, false, true });
             CanMoveDirecInit.Add(new bool[8] { true, true, false, false, false, false, false, true });
             CanMoveDirecInit.Add(new bool[8] { true, false, false, true, true, true, false, false });
@@ -96,6 +96,10 @@ namespace Assets.Sprict.Field
         public static Field PieceSet(Field field, int id, int x, int y)
         {
             Piece piece = PieceFromID(field, id);
+            if(piece.PosX >= 0 || piece.PosY >= 0)
+            {
+                field.IDs[piece.PosX, piece.PosY] = 0;
+            }
             piece.PosX = x;
             piece.PosY = y;
             piece.isExist = true;                
