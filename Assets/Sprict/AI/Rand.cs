@@ -19,6 +19,11 @@ namespace Assets.Sprict.AI
             list = PieceController.PlayerActionList(field, 2);
             System.Random r = new System.Random();
             int index = r.Next(list.Count);
+            if (list[index].MoveOrTurn == 0)
+            {
+                return list[index];
+            }
+            index = r.Next(list.Count);
             return list[index];
         }
 

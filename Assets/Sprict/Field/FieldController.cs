@@ -8,7 +8,9 @@ namespace Assets.Sprict.Field
     {
         public Field field;
         public int TurnSide;
+        public bool isEnd;
         static System.Random rnd;
+
 
         public FieldController()
         {
@@ -89,10 +91,12 @@ namespace Assets.Sprict.Field
         {
             if (PieceController.PieceFromID(field, 1).isDeath)
             {
+                isEnd = true;
                 return 2;
             }
             if(PieceController.PieceFromID(field, 2).isDeath)
             {
+                isEnd = true;
                 return 1;
             }
             
@@ -116,7 +120,7 @@ namespace Assets.Sprict.Field
             {
                 return 0;
             }
-
+            isEnd = true;
             return 3;
         }
     }

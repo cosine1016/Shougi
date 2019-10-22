@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour
         game.InitilizedRandomGame();
         SpawnAll();
         RandAI = new Rand();
+        if(game.TurnSide == 2)
+        {
+            StartCoroutine("CPUwait");
+        }
     }
 
     // Update is called once per frame
@@ -45,10 +49,6 @@ public class GameManager : MonoBehaviour
             }
             rotateL.SetActive(false);
             rotateR.SetActive(false);
-        }
-        if(vsCPU && game.TurnSide == 2)
-        {
-            CPUACtion();
         }
     }
 
@@ -144,7 +144,10 @@ public class GameManager : MonoBehaviour
             GameEnd(game.JudgeWinner());
         }
         GetComponent<AudioSource>().PlayOneShot(ti);
-
+        if (vsCPU && game.TurnSide == 2 && !game.isEnd)
+        {
+            StartCoroutine("CPUwait");
+        }
     }
 
     public void Rotate(int direc)
@@ -159,7 +162,18 @@ public class GameManager : MonoBehaviour
         rotateL.SetActive(false);
         rotateR.SetActive(false);
         GetComponent<AudioSource>().PlayOneShot(ti);
+        if (vsCPU && game.TurnSide == 2)
+        {
+            StartCoroutine("CPUwait");
+        }
     }
+
+    IEnumerator CPUwait()
+    {
+        yield return new WaitForSeconds(1);
+        CPUACtion();
+    }
+
 
     void CPUACtion()
     {

@@ -128,9 +128,11 @@ namespace Assets.Sprict.Field
 
             foreach(Piece item in Player)
             {
-                ret.AddRange(PieceActionList(field, item));
+                if (!item.isDeath)
+                {
+                    ret.AddRange(PieceActionList(field, item));
+                }
             }
-
             return ret;
         }
 
