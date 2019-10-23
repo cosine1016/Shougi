@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 
-    public FieldController game;
+    public Field game;
     [SerializeField] bool vsCPU;
     [SerializeField] int CPULevel;
     [SerializeField] GameObject[] cells;
@@ -20,18 +20,30 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioClip ti;
     [SerializeField] AudioClip akahara;
     public bool isChoice;
-    Rand RandAI;
+    IAgent AI;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        game = new FieldController();
+        game = new Field();
         PieceController.init();
         game.InitilizedRandomGame();
         SpawnAll();
-        RandAI = new Rand();
-        if(game.TurnSide == 2)
+        switch (CPULevel)
+        {
+            case 1:
+                AI = new Rand();
+                break;
+            case 2:
+                // depth, numAdopt
+                AI = new BruteForce(2, 20);
+                break;
+            default:
+                AI = new Rand();
+                break;
+        }
+        if (game.TurnSide == 2)
         {
             StartCoroutine("CPUwait");
         }
@@ -54,11 +66,11 @@ public class GameManager : MonoBehaviour
 
     public void SpawnAll()
     {
-        foreach(Piece item in game.field.Player1)
+        foreach(Piece item in game.Player1)
         {
             gameObject.GetComponent<PieceOutPut>().EntitySpown(item);
         }
-        foreach (Piece item in game.field.Player2)
+        foreach (Piece item in game.Player2)
         {
             gameObject.GetComponent<PieceOutPut>().EntitySpown(item);
         }
@@ -73,13 +85,13 @@ public class GameManager : MonoBehaviour
         }
         rotateL.SetActive(false);
         rotateR.SetActive(false);
-        if (PieceController.PieceFromID(game.field, id).Side == game.TurnSide)
+        if (PieceController.PieceFromID(game, id).Side == game.TurnSide)
         {
-            if (vsCPU && PieceController.PieceFromID(game.field, id).Side == 2) return;
-            CurrentPiece = PieceController.PieceFromID(game.field, id);
+            if (vsCPU && PieceController.PieceFromID(game, id).Side == 2) return;
+            CurrentPiece = PieceController.PieceFromID(game, id);
             isChoice = true;
             List<ActionDate> ActionList;
-            ActionList = PieceController.PieceActionList(game.field, CurrentPiece);
+            ActionList = PieceController.PieceActionList(game, CurrentPiece);
             foreach (ActionDate item in ActionList)
             {
                 if (item.MoveOrTurn == 0)
@@ -113,10 +125,10 @@ public class GameManager : MonoBehaviour
         {
             if (isChoice == true)
             {
-                Piece enemy = PieceController.PieceFromID(game.field, id);
+                Piece enemy = PieceController.PieceFromID(game, id);
                 if (CanMove(enemy.PosX, enemy.PosY))
                 {
-                    game.field = PieceController.PieceDeath(game.field, enemy.ID);
+                    game = PieceController.PieceDeath(game, enemy.ID);
                     Move(enemy.PosX, enemy.PosY);
                 }
             }
@@ -125,12 +137,12 @@ public class GameManager : MonoBehaviour
 
     public bool CanMove(int x, int y)
     {
-        return PieceController.PieceCanMoveJudge(game.field, CurrentPiece.ID, CurrentPiece.Side, x, y);
+        return PieceController.PieceCanMoveJudge(game, CurrentPiece.ID, CurrentPiece.Side, x, y);
     }
 
     public void Move(int x, int y)
     {
-        game.field = PieceController.PieceSet(game.field, CurrentPiece.ID, x, y);
+        game  = PieceController.PieceSet(game, CurrentPiece.ID, x, y);
         game.ChangeSide();
         isChoice = false;
         foreach (GameObject item in cells)
@@ -152,7 +164,7 @@ public class GameManager : MonoBehaviour
 
     public void Rotate(int direc)
     {
-        game.field = PieceController.PieceRotate(game.field, CurrentPiece.ID, direc);
+        game  = PieceController.PieceRotate(game , CurrentPiece.ID, direc);
         game.ChangeSide();
         isChoice = false;
         foreach (GameObject item in cells)
@@ -177,22 +189,14 @@ public class GameManager : MonoBehaviour
 
     void CPUACtion()
     {
-        ActionDate action = new ActionDate(-1, -1, -1);
-        switch (CPULevel)
-        {
-            case 1:
-                action = RandAI.Return(game.field);
-                break;
-            default:
-                break;
-        }
-        CurrentPiece = PieceController.PieceFromID(game.field, action.ID);
+        ActionDate action = AI.Search(game);
+        CurrentPiece = PieceController.PieceFromID(game, action.ID);
         if(action.MoveOrTurn == 0)
         {
-            int enemyid = game.field.IDs[action.MoveX, action.MoveY];
+            int enemyid = game .IDs[action.MoveX, action.MoveY];
             if (enemyid > 0)
             {
-                game.field = PieceController.PieceDeath(game.field, enemyid);
+                game  = PieceController.PieceDeath(game , enemyid);
             }
             Move(action.MoveX, action.MoveY);
         }

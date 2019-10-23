@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Sprict.Field
@@ -29,5 +30,16 @@ namespace Assets.Sprict.Field
             isDeath = false;
         }
 
+        public Piece()
+        {
+
+        }
+
+        public Piece Clone()
+        {
+            var p = (Piece)MemberwiseClone();
+            p.CanMoveDirec = CanMoveDirec.ToArray();
+            return p;
+        }
     }
 }

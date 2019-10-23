@@ -30,6 +30,9 @@ public class MenuManager : MonoBehaviour
             case 0:
                 SceneManager.LoadScene(2);
                 break;
+            case 1:
+                SceneManager.LoadScene(3);
+                break;
         }
     }
 

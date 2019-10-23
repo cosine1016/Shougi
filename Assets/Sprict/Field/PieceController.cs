@@ -81,7 +81,7 @@ namespace Assets.Sprict.Field
         public static Field PieceDeath(Field field, int id)
         {
             Piece piece = PieceFromID(field, id);
-            piece.isDeath = true ;
+            piece.isDeath = true;
             return field;
         }
 

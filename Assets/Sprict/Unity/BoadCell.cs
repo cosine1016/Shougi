@@ -36,10 +36,10 @@ public class BoadCell : MonoBehaviour
     {
         if(GM.GetComponent<GameManager>().isChoice && Input.GetMouseButton(0) && GM.GetComponent<GameManager>().CanMove(pos.x, pos.y))
         {
-            int enemyid = GM.GetComponent<GameManager>().game.field.IDs[pos.x, pos.y];
+            int enemyid = GM.GetComponent<GameManager>().game.IDs[pos.x, pos.y];
             if (enemyid > 0)
             {
-                GM.GetComponent<GameManager>().game.field = PieceController.PieceDeath(GM.GetComponent<GameManager>().game.field, enemyid);
+                GM.GetComponent<GameManager>().game = PieceController.PieceDeath(GM.GetComponent<GameManager>().game, enemyid);
             }
             GM.GetComponent<GameManager>().Move(pos.x, pos.y);
         }

@@ -24,7 +24,7 @@ public class EntityPiece : MonoBehaviour
 
     public void UpDataPos()
     { 
-        Field field = GM.GetComponent<GameManager>().game.field;
+        Field field = GM.GetComponent<GameManager>().game;
         Piece piece = PieceController.PieceFromID(field, ID);
         if (piece.isDeath == true)
         {

@@ -34,5 +34,14 @@ namespace Assets.Sprict.Field
             MoveY = _y;
         }
 
+        public ActionDate()
+        {
+
+        }
+
+        public ActionDate Clone()
+        {
+            return (ActionDate)MemberwiseClone();
+        }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Assets.Sprict.AI
 {
-    public class Rand
+    public class Rand : IAgent
     {
         List<ActionDate> list;
 
@@ -14,7 +14,7 @@ namespace Assets.Sprict.AI
 
         }
 
-        public ActionDate Return(Assets.Sprict.Field.Field field)
+        public ActionDate Search(Assets.Sprict.Field.Field field)
         {
             list = PieceController.PlayerActionList(field, 2);
             System.Random r = new System.Random();
@@ -26,6 +26,5 @@ namespace Assets.Sprict.AI
             index = r.Next(list.Count);
             return list[index];
         }
-
     }
 }
