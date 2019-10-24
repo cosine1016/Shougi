@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:
                 // depth, numAdopt
-                AI = new BruteForce(2, 20);
+                AI = new BruteForce(5, 200);
                 break;
             default:
                 AI = new Rand();

@@ -11,18 +11,15 @@ namespace Assets.Sprict.AI
     {
         public double score = 0;
         public Field.Field field;
-        public ActionDate action;
 
-        public SearchData(Field.Field _field, ActionDate _action)
+        public SearchData(Field.Field _field)
         {
             field = _field;
-            action = _action;
         }
 
-        public SearchData(Field.Field _field, ActionDate _action, double _score)
+        public SearchData(Field.Field _field, double _score)
         {
             field = _field;
-            action = _action;
             score = _score;
         }
 

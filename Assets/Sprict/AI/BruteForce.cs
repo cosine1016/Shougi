@@ -33,14 +33,39 @@ namespace Assets.Sprict.AI
             return Task.Run(() =>
             {
                 var result = new List<SearchData>();
-                var queue = new PriorityQueue<SearchData>(new SearchData(field, act));
+                var list = new SearchList(new SearchData(field));
                 for (int d = 0; d < depth; d++)
                 {
-                    List<SearchData> datas = queue.DequeueList(numAdoptNode);
-                    queue = new PriorityQueue<SearchData>();
+                    List<SearchData> datas = (d % 2 == 0) ? list.PopHighList(numAdoptNode) : list.PopLowList(numAdoptNode);
+                    list = new SearchList();
                     foreach (var data in datas)
                     {
+                        List<SearchData> tmpList = new List<SearchData>();
                         List<ActionDate> actionable = PieceController.PlayerActionList(data.field, data.field.TurnSide);
+                        // 疲れていたのでこのようなクソコードを書いてしまいました。
+                        // 締め切りが先、コードが後
+                        if (d == 0)
+                        {
+                            Field.Field f = field.Clone();
+                            int judge = f.Action(act);
+                            switch (judge)
+                            {
+                                case 0:
+                                    var tmp = new SearchData(f, data.score + f.Score(data.field.TurnSide) / (d + 1));
+                                    list.Push(tmp);
+                                    break;
+                                case 1:
+                                    result.Add(new SearchData(f, data.score - depth * 100 / (d + 1)));
+                                    break;
+                                case 2:
+                                    result.Add(new SearchData(f, data.score + depth * 100 / (d + 1)));
+                                    break;
+                                case 3:
+                                    result.Add(new SearchData(f, 0));
+                                    break;
+                            }
+                            continue;
+                        }
                         foreach (var action in actionable)
                         {
                             Field.Field f = data.field.Clone();
@@ -48,33 +73,48 @@ namespace Assets.Sprict.AI
                             switch (judge)
                             {
                                 case 0:
-                                    queue.Enqueue(new SearchData(f, action.Clone(), data.score + f.Score(f.TurnSide) / (d + 1)));
+                                    var tmp = new SearchData(f, data.score + f.Score(data.field.TurnSide) / (d + 1));
+                                    if (d % 2 == 0) list.Push(tmp);
+                                    else tmpList.Add(tmp);
                                     break;
                                 case 1:
-                                    result.Add(new SearchData(f, action.Clone(), data.score - depth * 1000 / (d + 1)));
+                                    result.Add(new SearchData(f, data.score - depth * 100 / (d + 1)));
                                     break;
                                 case 2:
-                                    result.Add(new SearchData(f, action.Clone(), data.score + depth * 100 / (d + 1)));
+                                    result.Add(new SearchData(f, data.score + depth * 100 / (d + 1)));
                                     break;
                                 case 3:
-                                    result.Add(new SearchData(f, action.Clone(), 0));
-                                    break;
-                                default:
+                                    result.Add(new SearchData(f, 0));
                                     break;
                             }
                         }
+                        if (d % 2 == 1)
+                        {
+                            // ここでCPUにとって最悪の手を人間の手として取り出す
+                            var bestData = tmpList.OrderBy(c => c.score).First();
+                            list.Push(bestData);
+                        }
                     }
                 }
-                var queueMax = queue.OrderBy(c => c.score).Last().score;
-                // TODO: 返り血を変えよう
-                if (result.Count > 0)
+                if (result.Count > 0 && list.Count > 0)
+                {
+                    var listMax = list.Last().score;
+                    var resMax = result.OrderBy(c => c.score).Last().score;
+                    return listMax > resMax ? (idx, listMax) : (idx, resMax);
+                }
+                else if (result.Count == 0 && list.Count > 0)
+                {
+                    var listMax = list.Last().score;
+                    return (idx, listMax);
+                }
+                else if (result.Count > 0 && list.Count == 0)
                 {
                     var resMax = result.OrderBy(c => c.score).Last().score;
-                    return queueMax > resMax ? (idx, queueMax) : (idx, resMax);
+                    return (idx, resMax);
                 }
                 else
                 {
-                    return (idx, queueMax);
+                    throw new InvalidOperationException();
                 }
             });
         }

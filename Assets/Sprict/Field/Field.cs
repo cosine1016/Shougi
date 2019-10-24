@@ -46,11 +46,11 @@ namespace Assets.Sprict.Field
         {
             double score1 = Player1.Where(p => !p.isDeath).Count();
             double score2 = Player2.Where(p => !p.isDeath).Count();
-            double scoreMin1 = PieceController.PlayerActionList(this, 1).Count;
-            double scoreMin2 = PieceController.PlayerActionList(this, 2).Count;
-            score1 += scoreMin1 / 10;
-            score2 += scoreMin2 / 10;
-            return TurnSide == 1 ? -1 * (score1 - score2) : score2 - score1;
+            //double scoreMin1 = PieceController.PlayerActionList(this, 1).Count;
+            //double scoreMin2 = PieceController.PlayerActionList(this, 2).Count;
+            //score1 += scoreMin1 / 10;
+            //score2 += scoreMin2 / 10;
+            return TurnSide == 1 ? score1 - score2 : score2 - score1;
         }
 
         public void InitilizedRandomGame()
