@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{544740BC-F835-2518-1356-1D23FAD9B5BF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -62,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assets\Sprict\AI\BruteForce.cs" />
     <Compile Include="Assets\Sprict\AI\IAgent.cs" />
+    <Compile Include="Assets\Sprict\AI\Node.cs" />
     <Compile Include="Assets\Sprict\AI\PriorityQueue.cs" />
     <Compile Include="Assets\Sprict\AI\Rand.cs" />
     <Compile Include="Assets\Sprict\AI\SearchData.cs" />

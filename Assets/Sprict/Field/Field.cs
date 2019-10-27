@@ -44,12 +44,12 @@ namespace Assets.Sprict.Field
 
         public double Score(int TurnSide)
         {
-            double score1 = Player1.Where(p => !p.isDeath).Count();
-            double score2 = Player2.Where(p => !p.isDeath).Count();
-            //double scoreMin1 = PieceController.PlayerActionList(this, 1).Count;
-            //double scoreMin2 = PieceController.PlayerActionList(this, 2).Count;
-            //score1 += scoreMin1 / 10;
-            //score2 += scoreMin2 / 10;
+            double score1 = Player1.Count(p => !p.isDeath);
+            double score2 = Player2.Count(p => !p.isDeath);
+//            double scoreMin1 = PieceController.PlayerActionList(this, 1).Count;
+//            double scoreMin2 = PieceController.PlayerActionList(this, 2).Count;
+//            score1 += scoreMin1 / 10;
+//            score2 += scoreMin2 / 10;
             return TurnSide == 1 ? score1 - score2 : score2 - score1;
         }
 
@@ -160,19 +160,13 @@ namespace Assets.Sprict.Field
                 return 1;
             }
 
-            foreach (Piece item in this.Player1)
+            if (Player1.Where(item => item.ID > 2).Any(item => !item.isDeath))
             {
-                if (item.ID > 2)
-                {
-                    if (!item.isDeath) return 0;
-                }
+                return 0;
             }
-            foreach (Piece item in this.Player2)
+            if (Player2.Where(item => item.ID > 2).Any(item => !item.isDeath))
             {
-                if (item.ID > 2)
-                {
-                    if (!item.isDeath) return 0;
-                }
+                return 0;
             }
             Piece p1 = PieceController.PieceFromID(this, 1), p2 = PieceController.PieceFromID(this, 2);
             int dx = p2.PosX - p1.PosX, dy = p2.PosY - p1.PosY;

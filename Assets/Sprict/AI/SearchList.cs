@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assets.Sprict.AI
 {
@@ -23,14 +20,13 @@ namespace Assets.Sprict.AI
 
         public SearchList(SearchData item)
         {
-            data = new List<SearchData>();
-            data.Add(item);
+            data = new List<SearchData> {item};
         }
 
         public void Push(SearchData item)
         {
             data.Add(item);
-            data.Sort();
+            data = data.OrderBy(c => c.score).ToList();
         }
 
         public SearchData PopLow()
@@ -49,18 +45,20 @@ namespace Assets.Sprict.AI
 
         public List<SearchData> PopLowList(int num)
         {
-            var list = new List<SearchData>();
-            if (num > data.Count) num = data.Count;
-            for (int i = 0; i < num; i++) list.Add(PopLow());
-            return list;
+            return data;
+//            var list = new List<SearchData>();
+//            if (num > data.Count) num = data.Count;
+//            for (int i = 0; i < num; i++) list.Add(PopLow());
+//            return list;
         }
 
         public List<SearchData> PopHighList(int num)
         {
-            var list = new List<SearchData>();
-            if (num > data.Count) num = data.Count;
-            for (int i = 0; i < num; i++) list.Add(PopHigh());
-            return list;
+            return data;
+//            var list = new List<SearchData>();
+//            if (num > data.Count) num = data.Count;
+//            for (int i = 0; i < num; i++) list.Add(PopHigh());
+//            return list;
         }
 
         public IEnumerator<SearchData> GetEnumerator()
@@ -69,11 +67,6 @@ namespace Assets.Sprict.AI
         }
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        IEnumerator<SearchData> IEnumerable<SearchData>.GetEnumerator()
         {
             return GetEnumerator();
         }
