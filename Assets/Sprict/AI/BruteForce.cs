@@ -15,7 +15,7 @@ namespace Assets.Sprict.AI
 
         public BruteForce(int _depth, int _numAdoptNode)
         {
-            depth = _depth - 1;
+            depth = _depth;
             numAdoptNode = _numAdoptNode;
         }
 
@@ -35,20 +35,22 @@ namespace Assets.Sprict.AI
             {
                 List<Node> tmpList = new List<Node>();
                 List<Node> searchList = new List<Node>();
-                Field.Field f = field.Clone();
-                int judge = f.Action(act);
-                Node root = new Node(null, new SearchData(f, f.Score(f.TurnSide)));
+                int judge = field.Action(act);
+                // CPUのスコアをrootに格納
+                Node root = new Node(null, new SearchData(field.Clone(), field.Score(2)));
                 switch (judge)
                 {
                     case 0:
+                        // Playerのスコアに関してExpand
                         searchList.AddRange(root.Expand(0));
                         break;
-                    case 1: return (idx, -10);
+                    case 1: throw new InvalidDataException();
                     case 2: return (idx, 1000);
                     case 3: return (idx, 0);
                 }
 
-                for (int d = 1; d < depth+1; d++)
+                // 指定depth回木を拡張
+                for (int d = 1; d < depth; d++)
                 {
                     foreach (var node in searchList)
                     {
@@ -57,68 +59,14 @@ namespace Assets.Sprict.AI
                     searchList.AddRange(tmpList);
                     tmpList.Clear();
                 }
-                return (idx, root.Score);
-            });
-        }
-
-        private Task<(int, double)> QueueSearch(Field.Field field, ActionDate act, int idx)
-        {
-            return new Task<(int, double)>(() => {
-                var result = new List<SearchData>();
-                var list = new SearchList(new SearchData(field));
+                int side = -1;
+                Node bestChild = root;
                 for (int d = 0; d < depth; d++)
                 {
-                    List<SearchData> datas = (d % 2 == 0) ? list.PopLowList(numAdoptNode) : list.PopHighList(numAdoptNode);
-                    list = new SearchList();
-                    foreach (var data in datas)
-                    {
-                        List<SearchData> tmpList = new List<SearchData>();
-                        List<ActionDate> actionable = (d == 0) ? new List<ActionDate> {act} : PieceController.PlayerActionList(data.field, data.field.TurnSide);
-                        foreach (var action in actionable)
-                        {
-                            Field.Field f = data.field.Clone();
-                            int judge = f.Action(action);
-                            if (judge == 0)
-                            {
-                                var tmp = new SearchData(f, data.score + f.Score(data.field.TurnSide) / (d + 1));
-                                if (d % 2 == 0) list.Push(tmp);
-                                else tmpList.Add(tmp);
-                            }
-                            else if (judge == 1)
-                            {
-                                result.Add(new SearchData(f, data.score - depth * 100 / (d + 1) / 5));
-                            }
-                            else if (judge == 2)
-                            {
-                                result.Add(new SearchData(f, data.score + depth * 100 / (d + 1) / 5));
-                            }
-                            else if (judge == 3)
-                            {
-                                result.Add(new SearchData(f, 0));
-                            }
-                        }
-                        if (d % 2 != 1) continue;
-                        // ここでCPUにとって最悪の手を人間の手として取り出す
-                        var bestData = tmpList.OrderBy(c => c.score).First();
-                        list.Push(bestData);
-                    }
+                    if (bestChild.Count == 0) break;
+                    bestChild = (side == 1) ? bestChild.BestChild : bestChild.WorstChild;
                 }
-                if (result.Count > 0 && list.Count > 0)
-                {
-                    var listMax = list.Last().score;
-                    var resMax = result.OrderBy(c => c.score).Last().score;
-                    return listMax > resMax ? (idx, listMax) : (idx, resMax);
-                }
-                if (result.Count == 0 && list.Count > 0)
-                {
-                    var listMax = list.Last().score;
-                    return (idx, listMax);
-                }
-                if (result.Count <= 0 || list.Count != 0) throw new InvalidOperationException();
-                {
-                    var resMax = result.OrderBy(c => c.score).Last().score;
-                    return (idx, resMax);
-                }
+                return (idx, bestChild.Score);
             });
         }
     }

@@ -13,9 +13,12 @@ namespace Assets.Sprict.AI
         private Node Parent;
         private List<Node> Children;
         private SearchData Data { get; }
-        public double Score { get; private set; }
 
+        public double Score { get; private set; }
         public bool IsEnd { get; } = false;
+        public int Count => Children.Count;
+        public Node BestChild => Children.OrderBy(c => c.Score).Last();
+        public Node WorstChild => Children.OrderByDescending(c => c.Score).Last();
         
         public Node(Node parent, SearchData data)
         {
@@ -44,7 +47,7 @@ namespace Assets.Sprict.AI
                 var data = new SearchData(Data.field);
                 if (judge == 0)
                 {
-                    data = new SearchData(f, f.Score(f.TurnSide));
+                    data = new SearchData(f, Data.score + f.Score(Data.field.TurnSide));
                     Children.Add(new Node(this, data));
                 }
                 else
@@ -52,26 +55,17 @@ namespace Assets.Sprict.AI
                     switch (judge)
                     {
                         case 1:
-                            data = new SearchData(f, 10 - d);
+                            data = new SearchData(f, d - 10);
                             break;
                         case 2:
-                            data = new SearchData(f, d - 10);
+                            data = new SearchData(f, 10 - d);
                             break;
                         case 3:
                             data = new SearchData(f, 0);
                             break;
                     }
-
                     Children.Add(new Node(this, data, true));
                 }
-            }
-            var parent = Parent;
-            var score = Score;
-            while (parent != null)
-            {
-                parent.BackProp(score);
-                score = parent.Score;
-                parent = parent.Parent;
             }
             return Children.Where(c => !c.IsEnd).ToList();
         }

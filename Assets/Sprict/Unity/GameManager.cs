@@ -30,18 +30,21 @@ public class GameManager : MonoBehaviour
         PieceController.init();
         game.InitilizedRandomGame();
         SpawnAll();
-        switch (CPULevel)
+        if (vsCPU)
         {
-            case 1:
-                AI = new Rand();
-                break;
-            case 2:
-                // depth, numAdopt
-                AI = new BruteForce(2, 200);
-                break;
-            default:
-                AI = new Rand();
-                break;
+            switch (CPULevel)
+            {
+                case 1:
+                    AI = new Rand();
+                    break;
+                case 2:
+                    // depth, numAdopt
+                    AI = new BruteForce(2, 200);
+                    break;
+                default:
+                    AI = new Rand();
+                    break;
+            }
         }
         if (game.TurnSide == 2)
         {
