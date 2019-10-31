@@ -55,13 +55,13 @@ namespace Assets.Sprict.AI
                     switch (judge)
                     {
                         case 1:
-                            data = new SearchData(f, d - 10);
+                            data = new SearchData(f, Data.score + (d - 50));
                             break;
                         case 2:
-                            data = new SearchData(f, 10 - d);
+                            data = new SearchData(f, Data.score + (50 - d));
                             break;
                         case 3:
-                            data = new SearchData(f, 0);
+                            data = new SearchData(f, Data.score);
                             break;
                     }
                     Children.Add(new Node(this, data, true));

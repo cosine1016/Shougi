@@ -11,12 +11,10 @@ namespace Assets.Sprict.AI
     class BruteForce : IAgent
     {
         private int depth;
-        private int numAdoptNode;
 
-        public BruteForce(int _depth, int _numAdoptNode)
+        public BruteForce(int _depth)
         {
             depth = _depth;
-            numAdoptNode = _numAdoptNode;
         }
 
         public ActionDate Search(Field.Field field)

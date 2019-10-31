@@ -34,12 +34,15 @@ public class GameManager : MonoBehaviour
         {
             switch (CPULevel)
             {
+                // argument: depth
                 case 1:
-                    AI = new Rand();
+                    AI = new BruteForce(0);
                     break;
                 case 2:
-                    // depth, numAdopt
-                    AI = new BruteForce(2, 200);
+                    AI = new BruteForce(1);
+                    break;
+                case 3:
+                    AI = new BruteForce(2);
                     break;
                 default:
                     AI = new Rand();

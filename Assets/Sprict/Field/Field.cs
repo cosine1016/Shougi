@@ -50,7 +50,8 @@ namespace Assets.Sprict.Field
             double scoreMin2 = PieceController.PlayerActionList(this, 2).Count;
             score1 += scoreMin1 / 10;
             score2 += scoreMin2 / 10;
-            return TurnSide == 1 ? score1 - score2 : score2 - score1;
+            double score = TurnSide == 1 ? score1 - score2 : score2 - score1;
+            return score;
         }
 
         public void InitilizedRandomGame()
